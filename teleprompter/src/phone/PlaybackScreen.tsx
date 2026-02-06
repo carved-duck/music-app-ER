@@ -1,5 +1,6 @@
 import {
   currentFile,
+  currentWindow,
   bpm,
   isPlaying,
   windowIndex,
@@ -7,6 +8,8 @@ import {
   progress,
   setBpm,
   togglePlayback,
+  nextWindow,
+  prevWindow,
 } from '../state/store'
 
 interface Props {
@@ -63,6 +66,32 @@ export function PlaybackScreen({ onBack }: Props) {
         >
           {isPlaying.value ? 'Pause' : 'Play'}
         </button>
+      </div>
+
+      {/* Glasses Preview */}
+      <div class="glasses-preview-wrapper">
+        <div class="section-label">Glasses Preview</div>
+        <div class="glasses-preview">
+          <pre class="glasses-preview-content">{currentWindow.value || 'No content'}</pre>
+        </div>
+        <div class="glasses-preview-nav">
+          <button
+            class="bpm-btn"
+            aria-label="Previous window"
+            onClick={prevWindow}
+            disabled={windowIndex.value <= 0}
+          >
+            ↑
+          </button>
+          <button
+            class="bpm-btn"
+            aria-label="Next window"
+            onClick={nextWindow}
+            disabled={windowIndex.value >= totalWindows.value - 1}
+          >
+            ↓
+          </button>
+        </div>
       </div>
 
       {/* Progress */}

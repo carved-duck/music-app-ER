@@ -251,6 +251,45 @@ body {
 }
 
 /* Empty state */
+/* Glasses preview */
+.glasses-preview-wrapper {
+  margin-bottom: var(--cross-element-spacing);
+}
+
+.glasses-preview {
+  background: #1a1a1a;
+  border-radius: var(--border-radius);
+  padding: 8px 10px;
+  aspect-ratio: 2 / 1;
+  overflow: hidden;
+  display: flex;
+  align-items: flex-start;
+}
+
+.glasses-preview-content {
+  color: #e0e0e0;
+  font-family: 'SF Mono', 'Menlo', 'Consolas', 'Liberation Mono', monospace;
+  font-size: 9px;
+  line-height: 1.25;
+  white-space: pre;
+  overflow: hidden;
+  margin: 0;
+  width: 100%;
+}
+
+.glasses-preview-nav {
+  display: flex;
+  gap: var(--same-element-spacing);
+  justify-content: center;
+  margin-top: 8px;
+}
+
+.glasses-preview-nav .bpm-btn:disabled {
+  opacity: 0.3;
+  cursor: default;
+}
+
+/* Empty state */
 .empty-state {
   text-align: center;
   padding: 48px var(--card-margin);
