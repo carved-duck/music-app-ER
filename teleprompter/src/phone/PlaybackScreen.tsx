@@ -11,6 +11,7 @@ import {
   nextWindow,
   prevWindow,
 } from '../state/store'
+import { beatTick, beatCount } from '../playback/engine'
 
 interface Props {
   onBack: () => void
@@ -58,7 +59,7 @@ export function PlaybackScreen({ onBack }: Props) {
         </div>
       </div>
 
-      {/* Play/Pause */}
+      {/* Play/Pause + Metronome */}
       <div class="card">
         <button
           class={`btn btn-full ${isPlaying.value ? 'btn-danger' : 'btn-success'}`}
@@ -66,12 +67,25 @@ export function PlaybackScreen({ onBack }: Props) {
         >
           {isPlaying.value ? 'Pause' : 'Play'}
         </button>
+        {isPlaying.value && (
+          <div class="metronome">
+            {[0, 1, 2, 3].map((i) => (
+              <div
+                key={i}
+                class={`metronome-dot${beatCount.value === i ? ' metronome-dot-active' : ''}${i === 0 && beatCount.value === 0 ? ' metronome-dot-downbeat' : ''}`}
+              />
+            ))}
+          </div>
+        )}
       </div>
 
       {/* Glasses Preview */}
       <div class="glasses-preview-wrapper">
         <div class="section-label">Glasses Preview</div>
         <div class="glasses-preview">
+          {isPlaying.value && (
+            <div class={`glasses-beat-bar${beatTick.value ? ' glasses-beat-bar-on' : ''}`} />
+          )}
           <pre class="glasses-preview-content">{currentWindow.value || 'No content'}</pre>
         </div>
         <div class="glasses-preview-nav">

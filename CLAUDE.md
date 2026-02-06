@@ -77,6 +77,10 @@ composeApp/src/
 - **even_hub_emu** ([repo](https://github.com/aegray/even_hub_emu)): Flutter emulator for testing without glasses.
 - **powerslides** ([repo](https://github.com/jappyjan/powerslides)): Presentation remote, React+TS+Vite monorepo, WebSocket relay, uses community "Even Better SDK".
 
+## Git Commit Rules
+
+- Do NOT include `Co-Authored-By` or any Claude/AI attribution in commit messages
+
 ## Open Questions
 
 - How much text / how many tab lines fit legibly on 576x288?

@@ -264,6 +264,7 @@ body {
   overflow: hidden;
   display: flex;
   align-items: flex-start;
+  position: relative;
 }
 
 .glasses-preview-content {
@@ -287,6 +288,48 @@ body {
 .glasses-preview-nav .bpm-btn:disabled {
   opacity: 0.3;
   cursor: default;
+}
+
+/* Metronome */
+.metronome {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 12px;
+}
+
+.metronome-dot {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--color-border);
+  transition: background 0.08s, transform 0.08s;
+}
+
+.metronome-dot-active {
+  background: var(--color-accent);
+  transform: scale(1.3);
+}
+
+.metronome-dot-downbeat {
+  background: var(--color-danger);
+  transform: scale(1.5);
+}
+
+/* Glasses beat bar */
+.glasses-beat-bar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: transparent;
+  transition: background 0.06s;
+  z-index: 1;
+}
+
+.glasses-beat-bar-on {
+  background: #4a9eff;
 }
 
 /* Empty state */

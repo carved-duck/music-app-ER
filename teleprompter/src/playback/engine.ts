@@ -1,40 +1,49 @@
-import { effect } from '@preact/signals'
+import { signal, effect } from '@preact/signals'
 import { isPlaying, bpm, windowIndex, windows } from '../state/store'
 import { updateGlasses } from '../glasses/display'
 
-let timerId: ReturnType<typeof setInterval> | null = null
+/** Toggles true/false on every beat — drives visual metronome */
+export const beatTick = signal(false)
 
-function start() {
-  if (timerId) return
+/** Counts beats 0-3 within the current measure */
+export const beatCount = signal(0)
 
-  // 4 beats per window advance (one measure at 4/4 time)
-  const beatsPerWindow = 4
+let scrollTimerId: ReturnType<typeof setInterval> | null = null
+let beatTimerId: ReturnType<typeof setInterval> | null = null
+
+function startBeat() {
+  if (beatTimerId) return
+
   const msPerBeat = 60_000 / bpm.value
-  const interval = msPerBeat * beatsPerWindow
+  beatCount.value = 0
+  beatTick.value = true
 
-  console.log(`[Playback] Starting at ${bpm.value} BPM (${Math.round(interval)}ms/window)`)
+  beatTimerId = setInterval(() => {
+    beatTick.value = !beatTick.value
+    beatCount.value = (beatCount.value + 1) % 4
 
-  timerId = setInterval(() => {
-    const idx = windowIndex.value
-    const wins = windows.value
-
-    if (idx < wins.length - 1) {
-      windowIndex.value = idx + 1
-      updateGlasses(wins[idx + 1])
-    } else {
-      // Reached end — stop
-      console.log('[Playback] Reached end of content')
-      isPlaying.value = false
+    // Advance window on beat 0 (every measure)
+    if (beatCount.value === 0) {
+      const idx = windowIndex.value
+      const wins = windows.value
+      if (idx < wins.length - 1) {
+        windowIndex.value = idx + 1
+        updateGlasses(wins[idx + 1])
+      } else {
+        console.log('[Playback] Reached end of content')
+        isPlaying.value = false
+      }
     }
-  }, interval)
+  }, msPerBeat)
 }
 
-function stop() {
-  if (timerId) {
-    clearInterval(timerId)
-    timerId = null
-    console.log('[Playback] Stopped')
+function stopBeat() {
+  if (beatTimerId) {
+    clearInterval(beatTimerId)
+    beatTimerId = null
   }
+  beatTick.value = false
+  beatCount.value = 0
 }
 
 /** Initialize playback engine — watches isPlaying & bpm signals */
@@ -42,8 +51,8 @@ export function initPlaybackEngine(): () => void {
   const dispose = effect(() => {
     const playing = isPlaying.value
     const _bpm = bpm.value // subscribe to BPM changes
-    stop()
-    if (playing) start()
+    stopBeat()
+    if (playing) startBeat()
   })
   return dispose
 }
