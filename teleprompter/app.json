@@ -1,0 +1,15 @@
+{
+  "package_id": "com.carvedduck.teleprompter",
+  "edition": "202601",
+  "name": "Teleprompt",
+  "version": "0.1.0",
+  "min_app_version": "0.1.0",
+  "tagline": "Guitar tabs on your glasses",
+  "description": "Teleprompter-style music score reader for G2 AR glasses. Displays guitar tabs with BPM-based auto-scrolling.",
+  "author": "Carved Duck",
+  "entrypoint": "index.html",
+  "permissions": {
+    "network": ["evenhub.evenrealities.com"],
+    "fs": ["./assets"]
+  }
+}
