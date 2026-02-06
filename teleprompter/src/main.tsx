@@ -2,9 +2,9 @@ import { render } from 'preact'
 import { effect } from '@preact/signals'
 import { App } from './phone/App'
 import { bridge } from './sdk/bridge'
-import { initGlassesDisplay, updateGlasses } from './glasses/display'
+import { initGlassesDisplay, updateGlasses, updateBeatIndicator } from './glasses/display'
 import { setupGlassesEvents } from './glasses/events'
-import { initPlaybackEngine } from './playback/engine'
+import { initPlaybackEngine, beatTick } from './playback/engine'
 import { parseTabFile } from './parser/tab-parser'
 import {
   addFile,
@@ -13,6 +13,7 @@ import {
   nextWindow,
   prevWindow,
   togglePlayback,
+  renderFileListForGlasses,
 } from './state/store'
 
 const FIXTURES = [
@@ -45,21 +46,27 @@ async function initSDK() {
     await bridge.init()
     isBridgeReady.value = true
 
-    // Create glasses display with initial placeholder
-    await initGlassesDisplay('Teleprompt\n\nSelect a file to begin.')
+    // Create glasses display with file list
+    await initGlassesDisplay(renderFileListForGlasses())
 
     // Wire ring gesture events
     const unsubEvents = setupGlassesEvents()
 
     // Watch current window and push to glasses
-    const disposeEffect = effect(() => {
+    const disposeContent = effect(() => {
       const content = currentWindow.value
       if (content) updateGlasses(content)
     })
 
+    // Watch beat tick and flash indicator dot on glasses
+    const disposeBeat = effect(() => {
+      updateBeatIndicator(beatTick.value)
+    })
+
     cleanupSDK = () => {
       unsubEvents()
-      disposeEffect()
+      disposeContent()
+      disposeBeat()
     }
 
     console.log('[Init] SDK + glasses ready')
